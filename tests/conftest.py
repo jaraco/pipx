@@ -1,8 +1,16 @@
+import os
 from pathlib import Path
 
 import pytest  # type: ignore
 
 from pipx import constants
+
+
+def prepend_path(path):
+    return os.pathsep.join([
+        str(path),
+        os.environ['PATH'],
+    ])
 
 
 @pytest.fixture
@@ -22,4 +30,4 @@ def pipx_temp_env(tmp_path, monkeypatch):
     monkeypatch.setattr(constants, "PIPX_LOCAL_VENVS", home_dir / "venvs")
     monkeypatch.setattr(constants, "PIPX_VENV_CACHEDIR", home_dir / ".cache")
 
-    monkeypatch.setenv("PATH", str(bin_dir))
+    monkeypatch.setenv("PATH", prepend_path(bin_dir))
